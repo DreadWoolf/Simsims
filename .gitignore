@@ -1,0 +1,5 @@
+code_quality-1.py
+Loggs/
+test.log
+pylint_report.txt
+__pycache__

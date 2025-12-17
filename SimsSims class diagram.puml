@@ -1,0 +1,158 @@
+@startuml SimsSims
+
+''''''''''''''''''''
+'     Resource     '
+''''''''''''''''''''
+abstract class Resource{
+
+}
+
+class Worker{
+- __longevity
++ change_longevity(change:int)
++ get_is_alive(): bool
+}
+
+
+class Food{
+- __quality
++ get_quality():int
+}
+
+
+class Product{
+
+}
+
+'''''''''''''''''''''
+'       Place       '
+'''''''''''''''''''''
+abstract class Place{
++ store(Resource)
++ retrive():Resource
+- {abstract} _retrive():Resource
+- {abstract} _store(Resource)
+' +store(Resource)
+}
+
+class Barrack{
+-__storage:list<Worker>
+-__check_living()
+-_store(Worker)
+-_retrieve():Worker
++total_workers():int
+' +__len__():int
+}
+
+
+class Barn{
+- __storage:list<Food>
+- _store(Food)
+- _retrieve():Food
++ total_food():int
+}
+
+
+class Warehouse{
+- __storage:list<Products>
+- _store(Product)
+- _retrieve():Product
++ total_products():int
+}
+
+'''''''''''''''''''''
+'    Transistion    '
+'''''''''''''''''''''
+abstract class Transistion{
+- _in_barrack
+- _out_barrack
+
+- {abstract} _fetchable_resource(): Bool
+- {abstract} _tick()
+- {abstract} _connect_in(connect: Place)
+- {abstract} _connect_out(connect: Place)
++ tick()
++ fetchable_resource()
++ connect_in(connect: Place)
++ connect_out(connect: Place)
+}
+
+
+class Factory{
+- __longevity_cost
+- __accident_prob
+- __out_warehouse
+- __send_result()
+- _tick() 
+- _connect_in(connect: Place)
+- _connect_out(connect: Place)
+}
+
+
+class Fields{
+- __accident_prob
+- __out_barn
+- __send_result()
+- _tick() 
+- _connect_in(connect: Place)
+- _connect_out(connect: Place)
+}
+
+
+class Dining{
+- _in_barn
+- __send_result()
+- _tick() 
+- _connect_in(connect: Place)
+- _connect_out(connect: Place)
+}
+
+
+class Home{
+- __in_warehouse
+- __housetype: bool
+- __send_result()
+- _tick()
+- _connect_in(connect: Place)
+- _connect_out(connect: Place)
+}
+
+
+'      Aggregations      '
+Barrack "1" o-- "*" Worker
+Barn "1" o-- "*" Food
+Warehouse "1" o-- "*" Product
+
+Dining "*" o-- "1..2" Barrack
+Dining "*" o-- "1" Barn
+
+Fields "*" o-- "1..2" Barrack
+Fields "*" o-- "1" Barn
+
+Factory "*" o-- "1..2" Barrack
+Factory "*" o-- "1" Warehouse
+
+Home "*" o-- "1..2" Barrack
+Home "*" o-- "1" Warehouse
+
+
+
+' Inheritance: Resource '
+Resource <|-down- Worker
+Resource <|-down- Food
+Resource <|-down- Product
+
+' Inheritance: Place '
+Place <|-down- Barrack
+Place <|-down- Warehouse
+Place <|-down- Barn
+
+' Inheritance: Transistion '
+Transistion <|-down- Factory
+Transistion <|-down- Home
+Transistion <|-down- Fields
+Transistion <|-down- Dining
+
+
+
+@enduml
